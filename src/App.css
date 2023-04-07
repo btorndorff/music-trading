@@ -36,3 +36,79 @@
     transform: rotate(360deg);
   }
 }
+
+/* login */
+
+.login {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-top: 18%;
+}
+
+/* Home */
+
+.home-feed {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin: 5%;
+  margin-top: 2%;
+}
+
+.filter {
+  margin-bottom: 30px;
+  margin-left: 5%;
+}
+
+.music-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+}
+
+/* navbar */
+.nav {
+  background-color: #1A1A1B;
+}
+
+.nav-buttons {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-left: 5%;
+  margin-right: 5%;
+}
+
+.logo {
+  width: 20%;
+  margin: 5px;
+}
+
+.add {
+  margin: 5px;
+  margin-left: 20px;
+  /* width: 3%; */
+}
+
+/* MusicItem */
+.MusicItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.thumbnail {
+  width: 60%;
+}
+
+.Title {
+  margin: 2px;
+}
+
+.Artist {
+  margin: 0;
+}
+
