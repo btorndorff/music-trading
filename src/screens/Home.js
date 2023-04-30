@@ -7,7 +7,7 @@ export default function Home(props) {
     const [filter, setFilter] = useState("all")
 
     useEffect(() => {
-        fetch(`http://localhost:3000/${filter}`)
+        fetch(`http://localhost:8080/${filter}`)
             .then((response) => response.json())
             .then((data) => {
                 console.log(data)
@@ -16,7 +16,7 @@ export default function Home(props) {
     }, [])
 
     useEffect(() => {
-        fetch(`http://localhost:3000/${filter}`)
+        fetch(`http://localhost:8080/${filter}`)
             .then((response) => response.json())
             .then((data) => {
                 console.log(data)
