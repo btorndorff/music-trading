@@ -1,10 +1,12 @@
 import logo from './images/logo.png'
 import './App.css';
 import Home from './screens/Home';
+import Profile from './screens/Profile';
 import { GoogleLogin } from '@react-oauth/google';
 import React, { useState, useEffect } from 'react';
 import { googleLogout, useGoogleLogin } from '@react-oauth/google';
 import axios from 'axios';
+import AddMusic from './components/AddMusic';
 
 function App() {
   const [user, setUser] = useState([]);
@@ -44,7 +46,9 @@ function App() {
   return (
     <div className="App">
       {profile ?
-        <Home logOut={logOut} {...profile}/>
+        // <Home logOut={logOut} {...profile}/>
+        // <Profile logOut={logOut} {...profile}/>
+        <AddMusic />
         :
         <div className='login'>
           <img className="logo" src={logo} alt="logo" />
