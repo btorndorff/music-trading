@@ -112,3 +112,56 @@
   margin: 0;
 }
 
+.button-music{
+  background-color: transparent;
+  cursor: pointer;
+  color: #ffffff;
+  border: none;
+}
+
+
+.modal {
+  background-color: #1A1A1B;
+  display: block;
+  width: 400px;
+  height: 300px;
+  /* margin: auto; */
+  font-size: 14px !important;
+}
+.modal > .header {
+  width: 100%;
+  border-bottom: 1px solid rgb(137, 49, 49);
+  font-size: 18px;
+  text-align: center;
+  padding: 5px;
+}
+.modal > .content {
+  text-align: left;
+  width: 100%;
+  padding: 10px 5px;
+}
+.album {
+  width: 150px;
+  height: auto;
+  float: left;
+  margin-right: 10%;
+}
+.modal > .actions {
+  width: 100%;
+  padding: 10px 5px;
+  margin: auto;
+  text-align: center;
+}
+.modal > .close {
+  cursor: pointer;
+  position: absolute;
+  display: block;
+  padding: 2px 5px;
+  line-height: 20px;
+  right: -10px;
+  top: -10px;
+  font-size: 24px;
+  background: #ffffff;
+  border-radius: 18px;
+  border: 1px solid #cfcece;
+}
