@@ -9,7 +9,8 @@ export default function Navbar(props) {
                 <div class="nav-right">
                     {/* <img className="add" src={add} alt="add" /> */}
                     <img className="add" src={add} alt="add" />
-                    {/* <button>Log out</button> */}
+                    <button onClick={props.logOut}>Log out</button>
+                    <img />
                 </div>
                 
             </div>

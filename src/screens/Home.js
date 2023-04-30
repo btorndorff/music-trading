@@ -2,7 +2,7 @@ import Navbar from "../components/NavBar";
 import MusicItem from "../components/MusicItem";
 import { useState, useEffect } from "react";
 
-export default function Home() {
+export default function Home(props) {
     const [tradeData, setTradeData] = useState([])
     const [filter, setFilter] = useState("all")
 
@@ -28,7 +28,7 @@ export default function Home() {
 
     return (
         <div>
-            <Navbar />
+            <Navbar logOut={props.logOut} {...props.profile}/>
 
             <div className="home-feed">
                 <select className="filter"
