@@ -53,13 +53,13 @@ app.get('/all', (req, res) => {
 
 // Add user
 app.post('/register', (req, res) => {
-    const {ProfilePhoto, email} = req.body;
+    const {ProfilePhoto, email, Name} = req.body;
     connection.query("SELECT * FROM Users WHERE email = ?", [email], (error, results, fields) => {
         if (error) throw error;
         if (results.length > 0) {
             res.status(409).send('Email already exists');
         } else {
-            connection.query("INSERT INTO Users (ProfilePhoto, email) VALUES (?, ?)", [ProfilePhoto, email], (error, results, fields) => {
+            connection.query("INSERT INTO Users (ProfilePhoto, email, Name) VALUES (?, ?, ?)", [ProfilePhoto, email, Name], (error, results, fields) => {
                 if (error) {
                     console.error(error);
                     res.status(500).send('Error creating user');
@@ -84,6 +84,36 @@ app.delete('/deleteUser/:id', (req, res) => {
         }
       });
 });
+
+// Follow account
+app.post('/follow', (req, res) => {
+    const {userID_A, userID_B} = req.body;
+    // res.send("A: " + userID_A + " B: " + userID_B);
+    connection.query("INSERT INTO Follows (userID_A, userID_B) VALUES (?, ?)", [userID_A, userID_B], (error, results, fields) => {
+        if (error) {
+            console.error(error);
+            res.status(500).send('Error following user');
+        } else {
+            res.send('User followed succesfully');
+        }
+    });
+});
+
+// Get followers of user B
+app.get('/followers', (req, res) => {
+    const {userID_B} = req.query;
+    connection.query("SELECT userID_A FROM Follows WHERE userID_B = ?", [userID_B], (error, results, fields) => {
+        if (error) {
+            console.error(error);
+            res.status(500).send('Error getting followers');
+        } else {
+            res.json(results);
+        }
+    });
+
+});
+
+
 
 const port = process.env.PORT || 8080;
 app.listen(port, () => {
