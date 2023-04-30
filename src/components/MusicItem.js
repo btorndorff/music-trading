@@ -20,32 +20,22 @@ export default function MusicItem(props) {
         <div className="content">
             <img className="album" src={props.Thumbnail === "" ? missing : props.Thumbnail}></img>
             {' '}
-            {props.Artist}
-            <br />
-            {props.CDtype}
+            <p style={{fontSize:"20px",}}>{props.Name}</p>
+            <p style={{fontSize:"15px",}}>{props.Artist}</p>
+            <p style={{fontSize:"15px",}}>{props.CDtype}</p>
+            <p style={{fontSize:"10px",}}> Type:{props.Format}</p>
+            <p>Comments:</p>
         </div>
         <div className="actions">
           <Popup
-            trigger={<button className="button"> Trigger </button>}
+            trigger={<button className="trade"> Trade </button>}
             position="top center"
             nested
           >
             <span>
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit. Beatae
-              magni omnis delectus nemo, maxime molestiae dolorem numquam
-              mollitia, voluptate ea, accusamus excepturi deleniti ratione
-              sapiente! Laudantium, aperiam doloribus. Odit, aut.
+              please work
             </span>
           </Popup>
-          <button
-            className="button"
-            onClick={() => {
-              console.log('modal closed ');
-              close();
-            }}
-          >
-            close modal
-          </button>
         </div>
       </div>
     )}
