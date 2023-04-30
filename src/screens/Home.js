@@ -2,8 +2,6 @@ import Navbar from "../components/NavBar";
 import MusicItem from "../components/MusicItem";
 import { useState, useEffect } from "react";
 
-
-
 export default function Home() {
     const [tradeData, setTradeData] = useState([])
     const [filter, setFilter] = useState("all")
