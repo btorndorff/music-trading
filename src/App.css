@@ -112,6 +112,33 @@
   margin: 0;
 }
 
+.search {
+  display: flex;
+  flex-direction: column;
+}
+
+.search-card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  max-width: 75%;
+  text-overflow: ellipsis;
+  /* max-width: 80%; */
+  /* justify-content: center; */
+  /* align-items: center; */
+}
+
+.search-card img {
+  width: 100px;
+}
+
+.search-info {
+
+}
+
+
+
+=======
 .button-music{
   background-color: transparent;
   cursor: pointer;
