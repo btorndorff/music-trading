@@ -6,7 +6,8 @@ import { GoogleLogin } from '@react-oauth/google';
 import React, { useState, useEffect } from 'react';
 import { googleLogout, useGoogleLogin } from '@react-oauth/google';
 import axios from 'axios';
-import AddMusic from './components/AddMusic';
+import { BrowserRouter as Router, Route, Link, Routes, Navigate } from 'react-router-dom';
+// import AccountPage from './screens/AccountPage';
 
 function App() {
   const [user, setUser] = useState([]);
@@ -16,6 +17,17 @@ function App() {
     onSuccess: (codeResponse) => setUser(codeResponse),
     onError: (error) => console.log('Login Failed:', error)
   });
+
+  function Mode(component) {
+    if (profile) {
+      return component
+    } else {
+      return <div className='login'>
+        <img className="logo" src={logo} alt="logo" />
+        <GoogleLogin onSuccess={() => login()} />
+      </div>
+    }
+  }
 
   useEffect(() => {
     if (user) {
@@ -41,7 +53,7 @@ function App() {
               console.log(`User ID: ${res.data.userId}`);
               // console.log(profile)
               // console.log({...data, id: res.data.userId})
-              setProfile({...data, id: res.data.userId})
+              setProfile({ ...data, id: res.data.userId })
               // console.log(profile)
             })
             .catch((err) => console.log(err));
@@ -64,8 +76,8 @@ function App() {
 
   return (
     <div className="App">
-      {profile ?
-        <Home {...profile} logOut={logOut}  />
+      {/* {profile ?
+        <Home {...profile} logOut={logOut} />
         // <Profile logOut={logOut} {...profile}/>
         // <AddMusic />
         :
@@ -73,7 +85,14 @@ function App() {
           <img className="logo" src={logo} alt="logo" />
           <GoogleLogin onSuccess={() => login()} />
         </div>
-      }
+      } */}
+      <Router>
+        <Routes>
+          <Route path="/" element={Mode(<Home {...profile} logOut={logOut} />)} />
+          {/* <Route path="/alive-frontend" element={} /> */}
+          <Route path="/profile/:userid" element={Mode(<Profile {...profile}/>)} />
+        </Routes>
+      </Router>
     </div>
   );
 }

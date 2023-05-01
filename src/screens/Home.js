@@ -10,7 +10,6 @@ export default function Home(props) {
     const [change, setChange] = useState(true)
 
     useEffect(() => {
-        console.log(props)
         fetch(`http://localhost:8080/${filter}`)
             .then((response) => response.json())
             .then((data) => {
