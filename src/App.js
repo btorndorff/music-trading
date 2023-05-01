@@ -62,6 +62,27 @@ function App() {
     }
   }, [user]);
 
+  const addMusicItem = async (selected) => {
+    const title = selected.title;
+    const [artist, track] = title.split(" - ")
+
+    // console.log(props)
+    try {
+      const response = await axios.post(`http://localhost:8080/add-music-item`, {
+        userId: profile.id,
+        name: track,
+        artist: artist,
+        genre: selected.genre[0],
+        thumb: selected.thumb,
+        format: selected.format[0].toLowerCase()
+      });
+      console.log(response.data); // handle success response
+      // setChange(prev => !prev)
+    } catch (error) {
+      console.error(error); // handle error response
+    }
+  };
+
   useEffect(() => {
     console.log(profile)
   }, [profile])
@@ -88,9 +109,9 @@ function App() {
       } */}
       <Router>
         <Routes>
-          <Route path="/" element={Mode(<Home {...profile} logOut={logOut} />)} />
+          <Route path="/" element={Mode(<Home {...profile} logOut={logOut} addMusicItem={addMusicItem}/>)} />
           {/* <Route path="/alive-frontend" element={} /> */}
-          <Route path="/profile/:userid" element={Mode(<Profile logOut={logOut} {...profile}/>)} />
+          <Route path="/profile/:userid" element={Mode(<Profile logOut={logOut} {...profile} addMusicItem={addMusicItem}/>)} />
         </Routes>
       </Router>
     </div>

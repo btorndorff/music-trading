@@ -5,6 +5,7 @@ import AddMusic from './AddMusic';
 import { Link } from 'react-router-dom';
 
 export default function Navbar(props) {
+    console.log(props)
 
     return (
         <nav className="nav">
@@ -27,7 +28,7 @@ export default function Navbar(props) {
                     >
                         {close => (
                             <div className="modal">
-                                <AddMusic {...props} close={close} addMusicItem={props.addMusicItem} />
+                                <AddMusic {...props} close={close} addMusicItem={props.addMusicItem} setChange={props.setChange}/>
                             </div>
                         )}
                     </Popup>

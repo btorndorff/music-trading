@@ -39,6 +39,7 @@ export default function AddMusic(props) {
             // };
 
             props.addMusicItem(selected);
+            props.setChange(prev => !prev)
             setSelected(null);
             setResults([]);
             setQuery('');

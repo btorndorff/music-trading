@@ -18,6 +18,13 @@
   grid-template-columns: repeat(4, 1fr);
 }
 
+.search-album {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 5%;
+}
+
 .App-header {
   background-color: #282c34;
   min-height: 100vh;
@@ -63,8 +70,9 @@
 }
 
 .filter {
-  margin-bottom: 30px;
-  margin-left: 5%;
+  /* margin-bottom: 30px;
+  margin-left: 5%; */
+
 }
 
 .music-grid {
