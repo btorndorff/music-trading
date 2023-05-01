@@ -267,6 +267,20 @@ app.delete('/deleteLike/:userID/:musicID', (req, res) => {
       });
 });
 
+// Delete follow
+app.delete('/deleteFollow/:userID_A/:userID_B', (req, res) => {
+    const userID_A = req.params.userID_A;
+    const userID_B = req.params.userID_B;
+    connection.query('DELETE FROM Follows WHERE userID_A = ? AND userID_B = ?', [userID_A, userID_B], (error, results, fields) => {
+        if (error) {
+          console.error(error);
+          res.status(500).send('Error deleting follow');
+        } else {
+          res.send(`Follow deleted successfully`);
+        }
+      });
+});
+
 const port = process.env.PORT || 8080;
 app.listen(port, () => {
     console.log(`App is running at: http://localhost:${port}`);
