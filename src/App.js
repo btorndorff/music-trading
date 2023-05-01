@@ -46,9 +46,9 @@ function App() {
   return (
     <div className="App">
       {profile ?
-        // <Home logOut={logOut} {...profile}/>
+        <Home logOut={logOut} {...profile}/>
         // <Profile logOut={logOut} {...profile}/>
-        <AddMusic />
+        // <AddMusic />
         :
         <div className='login'>
           <img className="logo" src={logo} alt="logo" />
