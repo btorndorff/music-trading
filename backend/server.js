@@ -19,8 +19,72 @@ app.get('/', (req, res) => {
     });
 });
 
+// Select user
+app.get('/user', (req, res) => {
+    const {userID} = req.query;
+    connection.query("SELECT * FROM Users WHERE ID = ?", [userID], (error, results, fields) => {
+        if (error) {
+            console.error(error);
+            res.status(500).send('Error getting user information');
+        } else {
+            res.json(results);
+        }
+    });
+});
 
-// Select all owned vinyls
+// Get followers of user 
+app.get('/followers', (req, res) => {
+    const {userID_B} = req.query;
+    connection.query("SELECT userID_A FROM Follows WHERE userID_B = ?", [userID_B], (error, results, fields) => {
+        if (error) {
+            console.error(error);
+            res.status(500).send('Error getting followers');
+        } else {
+            res.json(results);
+        }
+    });
+});
+
+// Get likes of user 
+app.get('/userlikes', (req, res) => {
+    const {userID} = req.query;
+    connection.query("SELECT musicID FROM Likes WHERE userID = ?", [userID], (error, results, fields) => {
+        if (error) {
+            console.error(error);
+            res.status(500).send('Error getting likes');
+        } else {
+            res.json(results);
+        }
+    });
+});
+
+// Get trades of user 
+app.get('/usertrades', (req, res) => {
+    const {userID} = req.query;
+    connection.query("SELECT * FROM trade_for WHERE userID_A = ? OR userID_B = ?", [userID, userID], (error, results, fields) => {
+        if (error) {
+            console.error(error);
+            res.status(500).send('Error getting trades');
+        } else {
+            res.json(results);
+        }
+    });
+});
+
+// Get music of user 
+app.get('/usermusic', (req, res) => {
+    const {userID} = req.query;
+    connection.query("SELECT * FROM Music WHERE userID = ?", [userID], (error, results, fields) => {
+        if (error) {
+            console.error(error);
+            res.status(500).send('Error getting user music');
+        } else {
+            res.json(results);
+        }
+    });
+});
+
+// Select all vinyls
 app.get('/vinyls', (req, res) => {
     var Format = "vinyl"
     connection.query('SELECT * FROM Music WHERE Format = ?', [Format], (error, results) => {
@@ -29,7 +93,7 @@ app.get('/vinyls', (req, res) => {
     });
 });
 
-// Select all owned CDs
+// Select all CDs
 app.get('/cds', (req, res) => {
     var Format = "cd"
     connection.query('SELECT * FROM Music WHERE Format = ?', [Format], (error, results) => {
@@ -38,7 +102,7 @@ app.get('/cds', (req, res) => {
     });
 });
 
-// Select all owned cassetes
+// Select all cassetes
 app.get('/cassettes', (req, res) => {
     var Format = "cassette"
     connection.query('SELECT * FROM Music WHERE Format = ?', [Format], (error, results) => {
@@ -47,7 +111,7 @@ app.get('/cassettes', (req, res) => {
     });
 });
 
-// Get all owned music items
+// Get all music items
 app.get('/all', (req, res) => {
     connection.query(
         "SELECT * FROM Music",
@@ -145,19 +209,6 @@ app.post('/follow', (req, res) => {
             res.status(500).send('Error following user');
         } else {
             res.send('User followed succesfully');
-        }
-    });
-});
-
-// Get followers of user B
-app.get('/followers', (req, res) => {
-    const {userID_B} = req.query;
-    connection.query("SELECT userID_A FROM Follows WHERE userID_B = ?", [userID_B], (error, results, fields) => {
-        if (error) {
-            console.error(error);
-            res.status(500).send('Error getting followers');
-        } else {
-            res.json(results);
         }
     });
 });
