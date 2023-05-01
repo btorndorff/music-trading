@@ -1,5 +1,6 @@
-import React, { useState,useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+
 
 export default function AddMusic(props) {
     const [query, setQuery] = useState('');
@@ -13,29 +14,20 @@ export default function AddMusic(props) {
     };
 
     useEffect(() => {
+        console.log(selected)
         if (selected) {
             const title = selected.title;
             const [artist, track] = title.split(" - ");
 
-            let additionalDetail = ""
-            if (selected.format[0] == 'Vinyl') {
-                additionalDetail = "45"
-            } else if (selected.format[0] == "CD") {
-                additionalDetail = "Deluxe"
-            } else {
-                additionalDetail = "Type I"
-            }
-
             const addMusicItem = async () => {
                 try {
                     const response = await axios.post(`http://localhost:8080/add-music-item`, {
-                        userId: 0,
+                        userId: "0",
                         name: track,
                         artist: artist,
                         genre: selected.genre[0],
-                        format: additionalDetail,
-                        image: selected.thumb,
-                        itemType: selected.format[0]
+                        thumb: selected.thumb,
+                        format: selected.format[0].toLowerCase()
                     });
                     console.log(response.data); // handle success response
                 } catch (error) {
@@ -43,13 +35,16 @@ export default function AddMusic(props) {
                 }
             };
             addMusicItem();
+            setSelected(null);
+            setResults([]);
+            setQuery('');
         }
     }, [selected]);
 
 
     return (
-        <div>
-            <input type="text" value={query} onChange={(e) => setQuery(e.target.value)} />
+        <>
+            <input style={{ margin: "10px" }} type="text" value={query} onChange={(e) => setQuery(e.target.value)} />
             <button onClick={handleSearch}>Search</button>
             <div className='search'>
                 {results.map((result) => (
@@ -63,7 +58,10 @@ export default function AddMusic(props) {
                     </div>
                 ))}
             </div>
-        </div>
+            <button className="close" onClick={props.close}>
+                &times;
+            </button>
+        </>
     );
 }
 
