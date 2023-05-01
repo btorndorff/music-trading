@@ -10,31 +10,50 @@ import AddMusic from './components/AddMusic';
 
 function App() {
   const [user, setUser] = useState([]);
-  const [profile, setProfile] = useState([]);
+  const [profile, setProfile] = useState(null);
 
   const login = useGoogleLogin({
     onSuccess: (codeResponse) => setUser(codeResponse),
     onError: (error) => console.log('Login Failed:', error)
   });
 
-  useEffect(
-    () => {
-      if (user) {
-        axios
-          .get(`https://www.googleapis.com/oauth2/v1/userinfo?access_token=${user.access_token}`, {
-            headers: {
-              Authorization: `Bearer ${user.access_token}`,
-              Accept: 'application/json'
-            }
+  useEffect(() => {
+    if (user) {
+      axios
+        .get(`https://www.googleapis.com/oauth2/v1/userinfo?access_token=${user.access_token}`, {
+          headers: {
+            Authorization: `Bearer ${user.access_token}`,
+            Accept: 'application/json'
+          }
+        })
+        .then((res) => {
+          let data = res.data
+          // setProfile(res.data);
+          // console.log(profile)
+          // Register the user with the backend if they don't already exist
+          axios.post('http://localhost:8080/register', {
+            ProfilePhoto: res.data.picture,
+            email: res.data.email,
+            Name: res.data.name
           })
-          .then((res) => {
-            setProfile(res.data);
-          })
-          .catch((err) => console.log(err));
-      }
-    },
-    [user]
-  );
+            .then((res) => {
+              // Log the user ID if registration is successful
+              console.log(`User ID: ${res.data.userId}`);
+              // console.log(profile)
+              // console.log({...data, id: res.data.userId})
+              setProfile({...data, id: res.data.userId})
+              // console.log(profile)
+            })
+            .catch((err) => console.log(err));
+        })
+        .catch((err) => console.log(err));
+    }
+  }, [user]);
+
+  useEffect(() => {
+    console.log(profile)
+  }, [profile])
+
 
   // log out function to log the user out of google and set the profile array to null
   const logOut = () => {
@@ -46,7 +65,7 @@ function App() {
   return (
     <div className="App">
       {profile ?
-        <Home logOut={logOut} {...profile}/>
+        <Home {...profile} logOut={logOut}  />
         // <Profile logOut={logOut} {...profile}/>
         // <AddMusic />
         :
