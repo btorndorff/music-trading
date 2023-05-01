@@ -281,6 +281,21 @@ app.delete('/deleteFollow/:userID_A/:userID_B', (req, res) => {
       });
 });
 
+// Update trade state
+app.put('/updateTrade/:tradeID/:status', (req, res) => {
+    const tradeID = req.params.tradeID;
+    const status = req.params.status;
+    // res.send("A: " + userID_A + " B: " + userID_B);
+    connection.query("UPDATE trade_for SET Trade_State = ? WHERE Trade_ID = ?", [status, tradeID], (error, results, fields) => {
+        if (error) {
+            console.error(error);
+            res.status(500).send('Error updating trade state');
+        } else {
+            res.send('Trade state updated succesfully');
+        }
+    });
+});
+
 const port = process.env.PORT || 8080;
 app.listen(port, () => {
     console.log(`App is running at: http://localhost:${port}`);
