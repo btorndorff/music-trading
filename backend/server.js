@@ -13,7 +13,7 @@ app.use(express.json());
 
 // Home page
 app.get('/', (req, res) => {
-    connection.query('SELECT * FROM Owned_CD UNION SELECT * FROM Owned_Vinyl UNION SELECT * FROM Owned_Cassette', (error, results) => {
+    connection.query('SELECT * FROM Music', (error, results) => {
         if (error) throw error;
         res.json(results);
     });
@@ -22,37 +22,35 @@ app.get('/', (req, res) => {
 
 // Select all owned vinyls
 app.get('/vinyls', (req, res) => {
-    connection.query('SELECT * FROM Owned_Vinyl', (error, results) => {
+    var Format = "vinyl"
+    connection.query('SELECT * FROM Music WHERE Format = ?', [Format], (error, results) => {
         if (error) throw error;
-        const formattedResults = results.map(result => ({ ...result, format: 'vinyl' }));
-        res.json(formattedResults);
+        res.json(results);
     });
 });
 
 // Select all owned CDs
 app.get('/cds', (req, res) => {
-    connection.query('SELECT * FROM Owned_CD', (error, results) => {
+    var Format = "cd"
+    connection.query('SELECT * FROM Music WHERE Format = ?', [Format], (error, results) => {
         if (error) throw error;
-        const formattedResults = results.map(result => ({ ...result, format: 'cd' }));
-        res.json(formattedResults);
+        res.json(results);
     });
 });
 
 // Select all owned cassetes
 app.get('/cassettes', (req, res) => {
-    connection.query('SELECT * FROM Owned_Cassette', (error, results) => {
+    var Format = "cassette"
+    connection.query('SELECT * FROM Music WHERE Format = ?', [Format], (error, results) => {
         if (error) throw error;
-        const formattedResults = results.map(result => ({ ...result, format: 'cassette' }));
-        res.json(formattedResults);
+        res.json(results);
     });
 });
 
 // Get all owned music items
 app.get('/all', (req, res) => {
     connection.query(
-        'SELECT *, "cd" AS format FROM Owned_CD UNION ' +
-        'SELECT *, "vinyl" AS format FROM Owned_Vinyl UNION ' +
-        'SELECT *, "cassette" AS format FROM Owned_Cassette',
+        "SELECT * FROM Music",
         (error, results) => {
             if (error) throw error;
             res.json(results);
@@ -160,6 +158,34 @@ app.get('/followers', (req, res) => {
             res.status(500).send('Error getting followers');
         } else {
             res.json(results);
+        }
+    });
+});
+
+// Add trade 
+app.post('/trade', (req, res) => {
+    const {musicID_A, musicID_B, userID_A, userID_B, Trade_State} = req.body;
+    // res.send("A: " + userID_A + " B: " + userID_B);
+    connection.query("INSERT INTO trade_for (musicID_A, musicID_B, userID_A, userID_B, Trade_State) VALUES (?, ?, ?, ?, ?)", [musicID_A, musicID_B, userID_A, userID_B, Trade_State], (error, results, fields) => {
+        if (error) {
+            console.error(error);
+            res.status(500).send('Error creating trade');
+        } else {
+            res.send('Trade created succesfully');
+        }
+    });
+});
+
+// Add like
+app.post('/like', (req, res) => {
+    const {userID, musicID} = req.body;
+    // res.send("A: " + userID_A + " B: " + userID_B);
+    connection.query("INSERT INTO Likes (userID, musicID) VALUES (?, ?)", [userID, musicID], (error, results, fields) => {
+        if (error) {
+            console.error(error);
+            res.status(500).send('Error liking item');
+        } else {
+            res.send('Like created succesfully');
         }
     });
 });
