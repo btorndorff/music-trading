@@ -45,10 +45,14 @@ app.get('/followers', (req, res) => {
     });
 });
 
-// Get likes of user 
 app.get('/userlikes', (req, res) => {
     const { userID } = req.query;
-    connection.query("SELECT musicID FROM Likes WHERE userID = ?", [userID], (error, results, fields) => {
+    connection.query(`
+        SELECT m.*
+        FROM Likes l
+        INNER JOIN Music m ON l.musicID = m.musicID
+        WHERE l.userID = ?
+    `, [userID], (error, results, fields) => {
         if (error) {
             console.error(error);
             res.status(500).send('Error getting likes');
@@ -57,6 +61,7 @@ app.get('/userlikes', (req, res) => {
         }
     });
 });
+
 
 // Get trades of user 
 app.get('/usertrades', (req, res) => {
@@ -249,7 +254,7 @@ app.get('/offers/:musicID', (req, res) => {
         SELECT tf.Trade_ID, m.*
         FROM trade_for tf
         INNER JOIN Music m ON (tf.musicID_A = m.musicID OR tf.musicID_B = m.musicID)
-        WHERE tf.musicID_B = ? AND m.musicID != ?
+        WHERE tf.musicID_B = ? AND m.musicID != ? AND tf.Trade_State = 'active'
       `,
         [musicID, musicID],
         (error, results, fields) => {
@@ -262,9 +267,6 @@ app.get('/offers/:musicID', (req, res) => {
         }
     );
 });
-
-
-
 
 
 // Add like

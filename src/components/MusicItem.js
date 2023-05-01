@@ -2,12 +2,14 @@ import missing from "../images/missing.jpeg"
 import Popup from "reactjs-popup";
 import axios from "axios"
 import { useState, useEffect } from "react";
+import { Link } from 'react-router-dom';
 
 
 export default function MusicItem(props) {
     const [TradeMode, setTradeMode] = useState(false)
     const [userMusic, setUserMusic] = useState([])
     const [offers, setOffers] = useState([])
+    const [liked, setLiked] = useState(false);
 
     useEffect(() => {
         axios.get('http://localhost:8080/usermusic', {
@@ -30,6 +32,19 @@ export default function MusicItem(props) {
             })
             .catch((error) => {
                 console.error(error); // display any errors in the console
+            });
+
+        axios.get('http://localhost:8080/userlikes', {
+            params: {
+                userID: props.id
+            }
+        })
+            .then((response) => {
+                const likedMusicIDs = response.data.map((item) => item.MusicID);
+                setLiked(likedMusicIDs.includes(props.MusicID));
+            })
+            .catch((error) => {
+                console.error(error);
             });
     }, [])
 
@@ -67,6 +82,34 @@ export default function MusicItem(props) {
 
     };
 
+    const handleLike = () => {
+        axios.post('http://localhost:8080/like', {
+            userID: props.id,
+            musicID: props.MusicID
+        })
+            .then(response => {
+                console.log(response.data);
+                setLiked(!liked);
+                props.setChange(prev => !prev)
+            })
+            .catch(error => {
+                console.error(error);
+            });
+    };
+
+    const handleUnlike = () => {
+        axios.delete(`http://localhost:8080/deleteLike/${props.id}/${props.MusicID}`)
+            .then((response) => {
+                console.log(response.data); // Like of 456 by 123 deleted successfully
+                setLiked(!liked);
+                props.setChange(prev => !prev)
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+
+    }
+
     const userCollection = userMusic.map(music => <div className="MusicItem" onClick={(e) => handleSubmit(e, music.MusicID)}>
         <img className="thumbnail" src={music.Thumbnail === "" ? missing : music.Thumbnail}></img>
         <p className="Title">{music.Name}</p>
@@ -103,7 +146,17 @@ export default function MusicItem(props) {
                         <p style={{ fontSize: "15px", }}>{props.Artist}</p>
                         {/* <p style={{ fontSize: "15px", }}>{props.CDtype}</p> */}
                         <p style={{ fontSize: "10px", }}> Type:{props.Format}</p>
-                        <p>Comments:</p>
+                        <Link to={`/profile/${props.userID}`}>
+                            <p>Go to owners page</p>
+                        </Link>
+
+                        {liked && props.id !== props.userID && (
+                            <button onClick={handleUnlike}>Unlike</button>
+                        )}
+                        {!liked && props.id !== props.userID && (
+                            <button onClick={handleLike}>Like</button>
+                        )}
+                        {/* <p>Comments:</p> */}
                     </div>
                     <div className="actions">
                         {props.id != props.userID ?
