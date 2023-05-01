@@ -185,20 +185,6 @@ app.post('/register', (req, res) => {
     })
 });
 
-
-// Delete user
-app.delete('/deleteUser/:id', (req, res) => {
-    const userID = req.params.id;
-    connection.query('DELETE FROM Users WHERE ID = ?', userID, (error, results, fields) => {
-        if (error) {
-          console.error(error);
-          res.status(500).send('Error deleting user');
-        } else {
-          res.send(`User ${userID} deleted successfully`);
-        }
-      });
-});
-
 // Follow account
 app.post('/follow', (req, res) => {
     const {userID_A, userID_B} = req.body;
@@ -241,6 +227,45 @@ app.post('/like', (req, res) => {
     });
 });
 
+// Delete user
+app.delete('/deleteUser/:id', (req, res) => {
+    const userID = req.params.id;
+    connection.query('DELETE FROM Users WHERE ID = ?', userID, (error, results, fields) => {
+        if (error) {
+          console.error(error);
+          res.status(500).send('Error deleting user');
+        } else {
+          res.send(`User ${userID} deleted successfully`);
+        }
+      });
+});
+
+// Delete music item
+app.delete('/deleteMusic/:id', (req, res) => {
+    const musicID = req.params.id;
+    connection.query('DELETE FROM Music WHERE MusicID = ?', musicID, (error, results, fields) => {
+        if (error) {
+          console.error(error);
+          res.status(500).send('Error deleting music item');
+        } else {
+          res.send(`Music Item ${musicID} deleted successfully`);
+        }
+      });
+});
+
+// Delete like
+app.delete('/deleteLike/:userID/:musicID', (req, res) => {
+    const userID = req.params.userID;
+    const musicID = req.params.musicID;
+    connection.query('DELETE FROM Likes WHERE userID = ? AND musicID = ?', [userID, musicID], (error, results, fields) => {
+        if (error) {
+          console.error(error);
+          res.status(500).send('Error deleting like');
+        } else {
+          res.send(`Like of ${musicID} by ${userID} deleted successfully`);
+        }
+      });
+});
 
 const port = process.env.PORT || 8080;
 app.listen(port, () => {
