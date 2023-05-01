@@ -4,6 +4,7 @@ import Popup from "reactjs-popup";
 import AddMusic from './AddMusic';
 
 export default function Navbar(props) {
+    // console.log(props)
     return (
         <nav className="nav">
             <div className='nav-buttons'>
@@ -18,7 +19,7 @@ export default function Navbar(props) {
                     >
                         {close => (
                             <div className="modal">
-                                <AddMusic {...props} close={close}/>
+                                <AddMusic {...props} close={close} addMusicItem={props.addMusicItem}/>
                             </div>
                         )}
                     </Popup>

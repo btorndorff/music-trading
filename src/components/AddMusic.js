@@ -16,25 +16,29 @@ export default function AddMusic(props) {
     useEffect(() => {
         console.log(selected)
         if (selected) {
-            const title = selected.title;
-            const [artist, track] = title.split(" - ");
+            
 
-            const addMusicItem = async () => {
-                try {
-                    const response = await axios.post(`http://localhost:8080/add-music-item`, {
-                        userId: "0",
-                        name: track,
-                        artist: artist,
-                        genre: selected.genre[0],
-                        thumb: selected.thumb,
-                        format: selected.format[0].toLowerCase()
-                    });
-                    console.log(response.data); // handle success response
-                } catch (error) {
-                    console.error(error); // handle error response
-                }
-            };
-            addMusicItem();
+            // const addMusicItem = async (selected) => {
+            //     const title = selected.title;
+            //     const [artist, track] = title.split(" - ")
+
+            //     // console.log(props)
+            //     try {
+            //         const response = await axios.post(`http://localhost:8080/add-music-item`, {
+            //             userId: props.id,
+            //             name: track,
+            //             artist: artist,
+            //             genre: selected.genre[0],
+            //             thumb: selected.thumb,
+            //             format: selected.format[0].toLowerCase()
+            //         });
+            //         console.log(response.data); // handle success response
+            //     } catch (error) {
+            //         console.error(error); // handle error response
+            //     }
+            // };
+
+            props.addMusicItem(selected);
             setSelected(null);
             setResults([]);
             setQuery('');

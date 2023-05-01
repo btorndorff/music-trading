@@ -103,23 +103,27 @@ app.post('/add-music-item', (req, res) => {
 
 // Add user
 app.post('/register', (req, res) => {
-    const {ProfilePhoto, email, Name} = req.body;
+    const { ProfilePhoto, email, Name } = req.body;
     connection.query("SELECT * FROM Users WHERE email = ?", [email], (error, results, fields) => {
         if (error) throw error;
         if (results.length > 0) {
-            res.status(409).send('Email already exists');
+            console.log(results)
+            const userId = results[0].ID;
+            res.json({ userId: userId });
         } else {
             connection.query("INSERT INTO Users (ProfilePhoto, email, Name) VALUES (?, ?, ?)", [ProfilePhoto, email, Name], (error, results, fields) => {
                 if (error) {
                     console.error(error);
                     res.status(500).send('Error creating user');
                 } else {
-                    res.send('User created succesfully');
+                    const userId = results.insertId;
+                    res.json({ userId: userId });
                 }
             });
         }
-    })
+    });
 });
+
 
 
 // Delete user
