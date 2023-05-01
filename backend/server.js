@@ -122,6 +122,19 @@ app.get('/all', (req, res) => {
     );
 });
 
+// Search for an album 
+app.get('/getAlbum', (req, res) => {
+    const {Name} = req.query;
+    connection.query("SELECT * FROM Music WHERE Name = ?", [Name], (error, results, fields) => {
+        if (error) {
+            console.error(error);
+            res.status(500).send('Error getting album');
+        } else {
+            res.json(results);
+        }
+    });
+});
+
 
 app.get('/search', async (req, res) => {
     const query = req.query.q;
