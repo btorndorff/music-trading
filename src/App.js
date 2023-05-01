@@ -90,7 +90,7 @@ function App() {
         <Routes>
           <Route path="/" element={Mode(<Home {...profile} logOut={logOut} />)} />
           {/* <Route path="/alive-frontend" element={} /> */}
-          <Route path="/profile/:userid" element={Mode(<Profile {...profile}/>)} />
+          <Route path="/profile/:userid" element={Mode(<Profile logOut={logOut} {...profile}/>)} />
         </Routes>
       </Router>
     </div>

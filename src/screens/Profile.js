@@ -6,6 +6,7 @@ import axios from 'axios';
 export default function Profile(props) {
     const [userProfile, setUserProfile] = useState(null)
     const [userMusic, setUserMusic] = useState([])
+    const [change, setChange] = useState(true)
 
     useEffect(() => {
         axios.get('http://localhost:8080/user', {
@@ -31,7 +32,21 @@ export default function Profile(props) {
             });
     }, [])
 
-    const musicElements = userMusic.map(music => <MusicItem {...music} />)
+    useEffect(() => {
+        axios.get('http://localhost:8080/usermusic', {
+            params: {
+                userID: props.id
+            }
+        })
+            .then((response) => {
+                setUserMusic(response.data)
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+    }, [change])
+
+    const musicElements = userMusic.map(music => <MusicItem {...music} id={props.id} setChange={setChange}/>)
 
     return (
         <div>

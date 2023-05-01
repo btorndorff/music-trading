@@ -13,6 +13,11 @@
   }
 }
 
+.collection-scroll {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+}
+
 .App-header {
   background-color: #282c34;
   min-height: 100vh;

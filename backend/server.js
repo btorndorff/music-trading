@@ -21,7 +21,7 @@ app.get('/', (req, res) => {
 
 // Select user
 app.get('/user', (req, res) => {
-    const {userID} = req.query;
+    const { userID } = req.query;
     connection.query("SELECT * FROM Users WHERE ID = ?", [userID], (error, results, fields) => {
         if (error) {
             console.error(error);
@@ -34,7 +34,7 @@ app.get('/user', (req, res) => {
 
 // Get followers of user 
 app.get('/followers', (req, res) => {
-    const {userID_B} = req.query;
+    const { userID_B } = req.query;
     connection.query("SELECT userID_A FROM Follows WHERE userID_B = ?", [userID_B], (error, results, fields) => {
         if (error) {
             console.error(error);
@@ -47,7 +47,7 @@ app.get('/followers', (req, res) => {
 
 // Get likes of user 
 app.get('/userlikes', (req, res) => {
-    const {userID} = req.query;
+    const { userID } = req.query;
     connection.query("SELECT musicID FROM Likes WHERE userID = ?", [userID], (error, results, fields) => {
         if (error) {
             console.error(error);
@@ -60,7 +60,7 @@ app.get('/userlikes', (req, res) => {
 
 // Get trades of user 
 app.get('/usertrades', (req, res) => {
-    const {userID} = req.query;
+    const { userID } = req.query;
     connection.query("SELECT * FROM trade_for WHERE userID_A = ? OR userID_B = ?", [userID, userID], (error, results, fields) => {
         if (error) {
             console.error(error);
@@ -73,7 +73,7 @@ app.get('/usertrades', (req, res) => {
 
 // Get music of user 
 app.get('/usermusic', (req, res) => {
-    const {userID} = req.query;
+    const { userID } = req.query;
     connection.query("SELECT * FROM Music WHERE userID = ?", [userID], (error, results, fields) => {
         if (error) {
             console.error(error);
@@ -124,7 +124,7 @@ app.get('/all', (req, res) => {
 
 // Search for an album 
 app.get('/getAlbum', (req, res) => {
-    const {Name} = req.query;
+    const { Name } = req.query;
     connection.query("SELECT * FROM Music WHERE Name = ?", [Name], (error, results, fields) => {
         if (error) {
             console.error(error);
@@ -206,17 +206,17 @@ app.delete('/deleteUser/:id', (req, res) => {
     const userID = req.params.id;
     connection.query('DELETE FROM Users WHERE ID = ?', userID, (error, results, fields) => {
         if (error) {
-          console.error(error);
-          res.status(500).send('Error deleting user');
+            console.error(error);
+            res.status(500).send('Error deleting user');
         } else {
-          res.send(`User ${userID} deleted successfully`);
+            res.send(`User ${userID} deleted successfully`);
         }
-      });
+    });
 });
 
 // Follow account
 app.post('/follow', (req, res) => {
-    const {userID_A, userID_B} = req.body;
+    const { userID_A, userID_B } = req.body;
     // res.send("A: " + userID_A + " B: " + userID_B);
     connection.query("INSERT INTO Follows (userID_A, userID_B) VALUES (?, ?)", [userID_A, userID_B], (error, results, fields) => {
         if (error) {
@@ -230,7 +230,7 @@ app.post('/follow', (req, res) => {
 
 // Add trade 
 app.post('/trade', (req, res) => {
-    const {musicID_A, musicID_B, userID_A, userID_B, Trade_State} = req.body;
+    const { musicID_A, musicID_B, userID_A, userID_B, Trade_State } = req.body;
     // res.send("A: " + userID_A + " B: " + userID_B);
     connection.query("INSERT INTO trade_for (musicID_A, musicID_B, userID_A, userID_B, Trade_State) VALUES (?, ?, ?, ?, ?)", [musicID_A, musicID_B, userID_A, userID_B, Trade_State], (error, results, fields) => {
         if (error) {
@@ -242,9 +242,34 @@ app.post('/trade', (req, res) => {
     });
 });
 
+app.get('/offers/:musicID', (req, res) => {
+    const musicID = req.params.musicID;
+    connection.query(
+        `
+        SELECT tf.Trade_ID, m.*
+        FROM trade_for tf
+        INNER JOIN Music m ON (tf.musicID_A = m.musicID OR tf.musicID_B = m.musicID)
+        WHERE tf.musicID_B = ? AND m.musicID != ?
+      `,
+        [musicID, musicID],
+        (error, results, fields) => {
+            if (error) {
+                console.error(error);
+                res.status(500).send('Error getting trade offers');
+            } else {
+                res.json(results);
+            }
+        }
+    );
+});
+
+
+
+
+
 // Add like
 app.post('/like', (req, res) => {
-    const {userID, musicID} = req.body;
+    const { userID, musicID } = req.body;
     // res.send("A: " + userID_A + " B: " + userID_B);
     connection.query("INSERT INTO Likes (userID, musicID) VALUES (?, ?)", [userID, musicID], (error, results, fields) => {
         if (error) {
@@ -261,12 +286,12 @@ app.delete('/deleteUser/:id', (req, res) => {
     const userID = req.params.id;
     connection.query('DELETE FROM Users WHERE ID = ?', userID, (error, results, fields) => {
         if (error) {
-          console.error(error);
-          res.status(500).send('Error deleting user');
+            console.error(error);
+            res.status(500).send('Error deleting user');
         } else {
-          res.send(`User ${userID} deleted successfully`);
+            res.send(`User ${userID} deleted successfully`);
         }
-      });
+    });
 });
 
 // Delete music item
@@ -274,12 +299,12 @@ app.delete('/deleteMusic/:id', (req, res) => {
     const musicID = req.params.id;
     connection.query('DELETE FROM Music WHERE MusicID = ?', musicID, (error, results, fields) => {
         if (error) {
-          console.error(error);
-          res.status(500).send('Error deleting music item');
+            console.error(error);
+            res.status(500).send('Error deleting music item');
         } else {
-          res.send(`Music Item ${musicID} deleted successfully`);
+            res.send(`Music Item ${musicID} deleted successfully`);
         }
-      });
+    });
 });
 
 // Delete like
@@ -288,12 +313,12 @@ app.delete('/deleteLike/:userID/:musicID', (req, res) => {
     const musicID = req.params.musicID;
     connection.query('DELETE FROM Likes WHERE userID = ? AND musicID = ?', [userID, musicID], (error, results, fields) => {
         if (error) {
-          console.error(error);
-          res.status(500).send('Error deleting like');
+            console.error(error);
+            res.status(500).send('Error deleting like');
         } else {
-          res.send(`Like of ${musicID} by ${userID} deleted successfully`);
+            res.send(`Like of ${musicID} by ${userID} deleted successfully`);
         }
-      });
+    });
 });
 
 // Delete follow
@@ -302,12 +327,12 @@ app.delete('/deleteFollow/:userID_A/:userID_B', (req, res) => {
     const userID_B = req.params.userID_B;
     connection.query('DELETE FROM Follows WHERE userID_A = ? AND userID_B = ?', [userID_A, userID_B], (error, results, fields) => {
         if (error) {
-          console.error(error);
-          res.status(500).send('Error deleting follow');
+            console.error(error);
+            res.status(500).send('Error deleting follow');
         } else {
-          res.send(`Follow deleted successfully`);
+            res.send(`Follow deleted successfully`);
         }
-      });
+    });
 });
 
 // Update trade state
