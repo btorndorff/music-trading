@@ -49,7 +49,7 @@ export default function Home(props) {
     };
 
 
-    const tradeElements = tradeData.map(trade => <MusicItem {...trade} />)
+    const tradeElements = tradeData.map(trade => <MusicItem {...trade} id={props.id}/>)
 
 
     return (
