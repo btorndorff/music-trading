@@ -80,30 +80,17 @@ app.get('/search', async (req, res) => {
 });
 
 app.post('/add-music-item', (req, res) => {
-    const { userId, itemType, name, artist, genre, format } = req.body;
+    const { userId, name, artist, genre, format, thumb } = req.body;
 
-    if (!userId || !itemType || !name || !artist || !genre || !format) {
+    console.log(req.body)
+
+    if (!userId || !name || !artist || !genre || !format || !thumb) {
         return res.status(400).send('Missing required parameters');
     }
 
-    let table;
+    const query = `INSERT INTO Music (userID, Name, Artist, Genre, Thumbnail, Format) VALUES (?, ?, ?, ?, ?, ?)`;
 
-    switch (itemType.toLowerCase()) {
-        case 'cd':
-            table = 'Owned_CD';
-            break;
-        case 'vinyl':
-            table = 'Owned_Vinyl';
-            break;
-        case 'cassette':
-            table = 'Owned_Cassette';
-            break;
-        default:
-            return res.status(400).send('Invalid item type');
-    }
-
-    const query = `INSERT INTO ${table} (userID, Name, Artist, Genre, ${format}) VALUES (?, ?, ?, ?, ?)`;
-    const values = [userId, name, artist, genre, additionalDetails];
+    const values = [userId, name, artist, genre, thumb, format];
 
     connection.query(query, values, (error, results) => {
         if (error) {
@@ -173,7 +160,6 @@ app.get('/followers', (req, res) => {
             res.json(results);
         }
     });
-
 });
 
 // Add trade 
