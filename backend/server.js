@@ -190,6 +190,20 @@ app.post('/trade', (req, res) => {
     });
 });
 
+// Add like
+app.post('/like', (req, res) => {
+    const {userID, musicID} = req.body;
+    // res.send("A: " + userID_A + " B: " + userID_B);
+    connection.query("INSERT INTO Likes (userID, musicID) VALUES (?, ?)", [userID, musicID], (error, results, fields) => {
+        if (error) {
+            console.error(error);
+            res.status(500).send('Error liking item');
+        } else {
+            res.send('Like created succesfully');
+        }
+    });
+});
+
 
 const port = process.env.PORT || 8080;
 app.listen(port, () => {
